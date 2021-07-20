@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Buggy NewTab",
+  "description": "Custom NewTab page",
+  "author": "HuggyDaBuggy",
+  "icons": {"128": "icon.png"},
+  "version": "0.1.0",
+  "chrome_url_overrides" : {
+    "newtab": "index.html"
+  }
+}

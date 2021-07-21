@@ -1,0 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
+:root {
+  --bg: #121212;
+  --bg-2: #101010;
+  --text-color: white;
+}
+body {
+  font-family: "Roboto", sans-serif;
+  color: white;
+  background-color: black;
+}
+::-webkit-scrollbar,
+.hide {
+  display: none;
+}
+.center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.content {
+  width: 30vw;
+  height: 50vh;
+  border-radius: 2rem;
+  border: 1px solid white;
+  text-align: center;
+}
+.settings {
+  position: absolute;
+  top: 1vh;
+  left: 1vw;
+  cursor: pointer;
+  font-size: 200%;
+}

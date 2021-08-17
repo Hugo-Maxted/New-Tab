@@ -1,35 +1,37 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
 :root {
-  --bg: #121212;
-  --bg-2: #101010;
-  --text-color: white;
+  --background: #000000;
+  --accent: #101010;
+  --text: white;
 }
 body {
   font-family: "Roboto", sans-serif;
-  color: white;
-  background-color: black;
+  color: var(--text);
+  background-color: var(--background);
+  margin: 0px;
 }
-::-webkit-scrollbar,
-.hide {
+::-webkit-scrollbar {
   display: none;
 }
-.center {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+.ui {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 5fr 1fr;
+  grid-template-rows: 1fr 2fr 1fr 1fr;
+  grid-template-areas:
+    "bike . timetable"
+    ". time ."
+    ". links ."
+    "settings . .";
 }
 .content {
-  width: 30vw;
-  height: 50vh;
-  border-radius: 2rem;
+  border-radius: 5px;
   border: 1px solid white;
   text-align: center;
 }
-.settings {
-  position: absolute;
-  top: 1vh;
-  left: 1vw;
-  cursor: pointer;
-  font-size: 200%;
+.time {
+  grid-area: time;
+  font-size: 500%;
+  text-align: center;
 }

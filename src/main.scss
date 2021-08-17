@@ -16,7 +16,7 @@ body {
 .ui {
   display: grid;
   grid-template-areas:
-    "bike . timetable"
+    "weather . timetable"
     ". time ."
     ". . ."
     ". links ."
@@ -26,8 +26,14 @@ body {
   height: calc(100vh - 1px);
   grid-template-columns: 1fr 5fr 1fr;
   grid-template-rows: 2fr auto 1fr auto 2fr;
-  > .bike {
-    grid-area: bike;
+  > .weather {
+    grid-area: weather;
+  }
+  > .timetable {
+    text-align: right;
+    grid-area: timetable;
+  }
+  > .weather, .timetable {
     font-size: 150%;
     padding: 5px;
   }

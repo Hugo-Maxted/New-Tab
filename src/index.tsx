@@ -32,9 +32,16 @@ const UI: () => JSX.Element = () => {
 
   return (
     <div className="ui">
-      <div className="bike">
-        <div>Rain: yummy</div>
-        <div>Temperature: no</div>
+      <div className="weather">
+        <div>69°C</div>
+        <div>Flood</div>
+      </div>
+      <div className="timetable">
+        <div>Hass</div>
+        <div>27:69:20</div>
+        <br />
+        <div>Lunch</div>
+        <div>Learning for life</div>
       </div>
       <div className="time">
         <div className="time">

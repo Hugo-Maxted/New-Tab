@@ -15,13 +15,13 @@ const UI: () => JSX.Element = () => {
   const [time, setTime] = useState<Date>(new Date());
 
   let links: linkType = {
-    Media: [{name: "Youtube", link: "https://www.youtube.com"}],
-    School: [
+    MEDIA: [{name: "Youtube", link: "https://www.youtube.com"}],
+    SCHOOL: [
       {name: "Connect", link: "https://connect.det.wa.edu.au/group/students/ui/overview"},
       {name: "Mathspace", link: "https://mathspace.co/student/"},
       {name: "Stile App", link: "https://stileapp.com/au/PMS_WA-988"},
     ],
-    Coding: [{name: "Github", link: "https://github.com/Hugo-Maxted"}],
+    CODING: [{name: "Github", link: "https://github.com/Hugo-Maxted"}],
   };
 
   useEffect((): void => {
@@ -32,10 +32,16 @@ const UI: () => JSX.Element = () => {
 
   return (
     <div className="ui">
+      <div className="bike">
+        <div>Rain: yummy</div>
+        <div>Temperature: no</div>
+      </div>
       <div className="time">
+        <div className="time">
         {time.getHours()}:{time.getMinutes() < 10 ? "0" : ""}
-        {time.getMinutes()}:{time.getSeconds()}
+        {time.getMinutes()}:{time.getSeconds() < 10 ? "0" : ""}{time.getSeconds()}</div>
         <div className="date">
+          {["Sunday", "Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday"][time.getDay()]}, {" "}
           {time.getDate()}
           {time.getDate() === 1 ? "st" : time.getDate() === 2 ? "nd" : time.getDate() === 3 ? "rd" : "th"} of{" "}
           {["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][time.getMonth()]} {time.getFullYear()}

@@ -17,7 +17,7 @@ body {
   display: grid;
   grid-template-areas:
     "weather . timetable"
-    ". time ."
+    ". time timetable"
     ". . ."
     ". links ."
     ". . .";
@@ -57,16 +57,18 @@ body {
         font-size: 200%;
       }
       > a {
-        display: block;
         text-align: center;
-        text-decoration: none;
         font-size: 150%;
-        color: var(--text);
-        &:hover {
-          font-weight: bold;
-          cursor: pointer;
-        }
       }
     }
+  }
+}
+a {
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  &:hover {
+    font-weight: bold;
+    cursor: pointer;
   }
 }

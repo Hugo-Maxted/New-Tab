@@ -13,8 +13,7 @@ interface linkType {
 interface period {
   current: string;
   left: string;
-  next1: string;
-  next2: string;
+  next: string[];
 }
 
 const UI: () => JSX.Element = () => {
@@ -121,7 +120,18 @@ const UI: () => JSX.Element = () => {
     }
 
     function getPeriod(): void {
+      if (new Date().getDay() === 0 || new Date().getDay() === 6) {
+        setPeriod({
+          current: "Weekend",
+          left: "",
+          next: [],
+        });
+
+        return;
+      }
+
       let currentTime = new Date().getTime();
+      let week = Math.ceil(((new Date().getTime() - new Date(new Date().getFullYear(), 0, 1).getTime()) / 86400000 + new Date(new Date().getFullYear(), 0, 1).getDay() + 1) / 7) % 2 === 0 ? 0 : 1;
 
       function getPeriodTime(period: number[]): number {
         let date = new Date();
@@ -134,17 +144,25 @@ const UI: () => JSX.Element = () => {
       }
 
       periods[time.getDay() - 1].forEach((val: number[], index: number): void => {
-        if (currentTime >= getPeriodTime(val) && currentTime < getPeriodTime(periods[time.getDay() - 1][index + 1])) {
-          let left = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime);
-
-          let minutes = left.getMinutes();
-          let seconds = left.getSeconds();
+        if (index === 0 && currentTime < getPeriodTime(val)) {
+          let hours = new Date(getPeriodTime(periods[time.getDay() - 1][index])).getHours() - new Date(currentTime).getHours();
+          let minutes = new Date(getPeriodTime(periods[time.getDay() - 1][index]) - currentTime).getMinutes();
+          let seconds = new Date(getPeriodTime(periods[time.getDay() - 1][index]) - currentTime).getSeconds();
 
           setPeriod({
-            current: timetable[0][time.getDay() - 1][index] || "",
-            left: (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
-            next1: timetable[0][time.getDay() - 1][index + 1] || "",
-            next2: timetable[0][time.getDay() - 1][index + 2] || "",
+            current: "Morning",
+            left: hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
+            next: timetable[week][time.getDay() - 1],
+          });
+        } else if (currentTime >= getPeriodTime(val) && currentTime < getPeriodTime(periods[time.getDay() - 1][index + 1])) {
+          let hours = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1])).getHours() - new Date(currentTime).getHours();
+          let minutes = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime).getMinutes();
+          let seconds = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime).getSeconds();
+
+          setPeriod({
+            current: timetable[week][time.getDay() - 1][index],
+            left: hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
+            next: timetable[week][time.getDay() - 1].slice(index),
           });
         }
       });
@@ -166,26 +184,23 @@ const UI: () => JSX.Element = () => {
     <div className="ui">
       <div className="weather">
         <div>{weather === null ? "Loading..." : weather.current.temp_c + "°C"}</div>
-        <div>{weather === null ? "" : weather.current.condition.text}</div>
+        <div>
+          <a href="http://www.bom.gov.au/products/IDR703.loop.shtml" target="_blank">
+            {weather === null ? "" : weather.current.condition.text}
+          </a>
+        </div>
       </div>
       <div className="timetable">
-        {time.getDay() === 0 || time.getDay() === 6 ? (
-          ""
-        ) : (
-          <>
-            <div>{period.current}</div>
-            <div>{period.left}</div>
-            <br />
-            <div>{period.next1}</div>
-            <div>{period.next2}</div>
-          </>
-        )}
+        <div>{period.current}</div>
+        <div>{period.left}</div>
+        <br />
+        {period.next?.map((val: string): JSX.Element => {
+          return <div>{val}</div>;
+        })}
       </div>
       <div className="time">
         <div className="time">
-          {time.getHours()}:{time.getMinutes() < 10 ? "0" : ""}
-          {time.getMinutes()}:{time.getSeconds() < 10 ? "0" : ""}
-          {time.getSeconds()}
+          {time.getHours()}:{time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()}:{time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds()}
         </div>
         <div className="date">
           {["Sunday", "Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday"][time.getDay()]}, {time.getDate()}

@@ -10,10 +10,17 @@ interface linkType {
     link: string;
   }[];
 }
+interface period {
+  current: string;
+  left: string;
+  next1: string;
+  next2: string;
+}
 
 const UI: () => JSX.Element = () => {
   const [time, setTime] = useState<Date>(new Date());
   const [weather, setWeather] = useState<any>(null);
+  const [period, setPeriod] = useState<period>({} as period);
 
   let links: linkType = {
     Media: [{name: "Youtube", link: "https://www.youtube.com"}],
@@ -25,7 +32,75 @@ const UI: () => JSX.Element = () => {
     Coding: [{name: "Github", link: "https://github.com/Hugo-Maxted"}],
   };
 
-  let periods: number[][] = [];
+  let periods: number[][][] = [
+    [
+      [8, 45],
+      [9, 0],
+      [9, 55],
+      [10, 50],
+      [11, 15],
+      [12, 10],
+      [13, 5],
+      [13, 40],
+      [14, 35],
+      [15, 30],
+    ],
+    [
+      [8, 45],
+      [9, 40],
+      [10, 35],
+      [10, 55],
+      [11, 50],
+      [12, 45],
+      [13, 25],
+      [14, 20],
+      [15, 15],
+    ],
+    [
+      [8, 45],
+      [9, 40],
+      [10, 35],
+      [10, 55],
+      [11, 50],
+      [12, 45],
+      [13, 25],
+      [14, 20],
+      [15, 15],
+    ],
+    [
+      [8, 45],
+      [9, 40],
+      [10, 35],
+      [10, 55],
+      [11, 50],
+      [12, 30],
+      [13, 10],
+      [14, 5],
+      [15, 0],
+    ],
+    [
+      [8, 45],
+      [9, 0],
+      [9, 55],
+      [10, 50],
+      [11, 15],
+      [12, 10],
+      [13, 5],
+      [13, 40],
+      [14, 35],
+      [15, 30],
+    ],
+  ];
+
+  let timetable = [
+    [
+      ["Advo", "Maths", "Maths", "Recess", "PE", "Careers", "Lunch", "Science", "Wood"],
+      ["Food", "Food", "Recess", "Italian", "Coding", "Lunch", "HASS", "English"],
+      ["Learning For Life", "Learning For Life", "Recess", "HASS", "HASS", "Lunch", "Innovations", "Innovations"],
+      ["English", "English", "Recess", "Innovations", "Advo", "Lunch", "Health", "Wood"],
+      ["Italian", "Italian", "Recess", "Science", "Science", "Lunch", "PE", "Maths"],
+    ],
+  ];
 
   useEffect((): void => {
     async function getWeather(): Promise<any> {
@@ -45,10 +120,43 @@ const UI: () => JSX.Element = () => {
         });
     }
 
+    function getPeriod(): void {
+      let currentTime = new Date().getTime();
+
+      function getPeriodTime(period: number[]): number {
+        let date = new Date();
+
+        date.setHours(period[0]);
+        date.setMinutes(period[1]);
+        date.setSeconds(0);
+
+        return date.getTime();
+      }
+
+      periods[time.getDay() - 1].forEach((val: number[], index: number): void => {
+        if (currentTime >= getPeriodTime(val) && currentTime < getPeriodTime(periods[time.getDay() - 1][index + 1])) {
+          let left = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime);
+
+          let minutes = left.getMinutes();
+          let seconds = left.getSeconds();
+
+          setPeriod({
+            current: timetable[0][time.getDay() - 1][index] || "",
+            left: (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
+            next1: timetable[0][time.getDay() - 1][index + 1] || "",
+            next2: timetable[0][time.getDay() - 1][index + 2] || "",
+          });
+        }
+      });
+    }
+
     getWeather();
+    getPeriod();
 
     setInterval((): void => {
       setTime(new Date());
+
+      getPeriod();
     }, 1000);
 
     setInterval(getWeather, 60000);
@@ -61,11 +169,17 @@ const UI: () => JSX.Element = () => {
         <div>{weather === null ? "" : weather.current.condition.text}</div>
       </div>
       <div className="timetable">
-        <div>Hass</div>
-        <div>27:69:20</div>
-        <br />
-        <div>Lunch</div>
-        <div>Learning for life</div>
+        {time.getDay() === 0 || time.getDay() === 6 ? (
+          ""
+        ) : (
+          <>
+            <div>{period.current}</div>
+            <div>{period.left}</div>
+            <br />
+            <div>{period.next1}</div>
+            <div>{period.next2}</div>
+          </>
+        )}
       </div>
       <div className="time">
         <div className="time">
@@ -75,7 +189,7 @@ const UI: () => JSX.Element = () => {
         </div>
         <div className="date">
           {["Sunday", "Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday"][time.getDay()]}, {time.getDate()}
-          {time.getDate() === 1 ? "st" : time.getDate() === 2 ? "nd" : time.getDate() === 3 ? "rd" : "th"} of{" "}
+          {time.getDate().toString().split("")[1] === "1" ? "st" : time.getDate().toString().split("")[1] === "2" ? "nd" : time.getDate().toString().split("")[1] === "3" ? "rd" : "th"} of{" "}
           {["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][time.getMonth()]} {time.getFullYear()}
         </div>
       </div>

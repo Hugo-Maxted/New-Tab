@@ -132,16 +132,6 @@ const UI: () => JSX.Element = () => {
     }
 
     function getPeriod(): void {
-      if (new Date().getDay() === 0 || new Date().getDay() === 6) {
-        setPeriod({
-          current: "Weekend",
-          left: "",
-          next: [],
-        });
-
-        return;
-      }
-
       let currentTime = new Date().getTime();
       let week = Math.ceil(((new Date().getTime() - new Date(new Date().getFullYear(), 0, 1).getTime()) / 86400000 + new Date(new Date().getFullYear(), 0, 1).getDay() + 1) / 7) % 2 === 0 ? 0 : 1;
 
@@ -155,28 +145,44 @@ const UI: () => JSX.Element = () => {
         return date.getTime();
       }
 
-      periods[time.getDay() - 1].forEach((val: number[], index: number): void => {
-        if (index === 0 && currentTime < getPeriodTime(val)) {
-          let hours = new Date(getPeriodTime(val)).getHours() - new Date(currentTime).getHours();
-          let minutes = new Date(getPeriodTime(val) - currentTime).getMinutes();
-          let seconds = new Date(getPeriodTime(val) - currentTime).getSeconds();
+      if (new Date().getDay() === 0 || new Date().getDay() === 6) {
+        setPeriod({
+          current: "",
+          left: "",
+          next: [],
+        });
 
-          setPeriod({
-            current: "Morning",
-            left: hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
-            next: timetable[week][time.getDay() - 1],
-          });
-        } else if (currentTime >= getPeriodTime(val) && currentTime < getPeriodTime(periods[time.getDay() - 1][index + 1])) {
-          let minutes = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime).getMinutes();
-          let seconds = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime).getSeconds();
+        return;
+      } else if (getPeriodTime(periods[time.getDay() - 1][periods[time.getDay() - 1].length - 1]) < currentTime) {
+        setPeriod({
+          current: "",
+          left: "",
+          next: [],
+        });
+      } else {
+        periods[time.getDay() - 1].forEach((val: number[], index: number): void => {
+          if (index === 0 && currentTime < getPeriodTime(val)) {
+            let hours = new Date(getPeriodTime(val)).getHours() - new Date(currentTime).getHours();
+            let minutes = new Date(getPeriodTime(val) - currentTime).getMinutes();
+            let seconds = new Date(getPeriodTime(val) - currentTime).getSeconds();
 
-          setPeriod({
-            current: timetable[week][time.getDay() - 1][index],
-            left: "0:" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
-            next: timetable[week][time.getDay() - 1].slice(index + 1),
-          });
-        }
-      });
+            setPeriod({
+              current: "",
+              left: hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
+              next: timetable[week][time.getDay() - 1],
+            });
+          } else if (currentTime >= getPeriodTime(val) && currentTime < getPeriodTime(periods[time.getDay() - 1][index + 1])) {
+            let minutes = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime).getMinutes();
+            let seconds = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime).getSeconds();
+
+            setPeriod({
+              current: timetable[week][time.getDay() - 1][index],
+              left: "0:" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
+              next: timetable[week][time.getDay() - 1].slice(index + 1),
+            });
+          }
+        });
+      }
     }
 
     getWeather();

@@ -33,11 +33,9 @@ body {
     text-align: right;
     grid-area: timetable;
     > .Recess,
-    > .Lunch {
+    > .Lunch,
+    > .Advo {
       font-weight: bold;
-    }
-    > .Morning {
-      display: none;
     }
   }
   > .weather,

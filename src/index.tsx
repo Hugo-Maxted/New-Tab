@@ -20,13 +20,20 @@ const UI: () => JSX.Element = () => {
   const [period, setPeriod] = useState<period>({} as period);
 
   let links: linkType = {
-    Media: [{name: "Youtube", link: "https://www.youtube.com"}],
+    Media: [
+      {name: "Youtube", link: "https://www.youtube.com"},
+      {name: "Github", link: "https://github.com/Hugo-Maxted"},
+    ],
     School: [
       {name: "Connect", link: "https://connect.det.wa.edu.au/group/students/ui/overview"},
       {name: "Mathspace", link: "https://mathspace.co/student/"},
       {name: "Stile App", link: "https://stileapp.com/au/PMS_WA-988"},
     ],
-    Coding: [{name: "Github", link: "https://github.com/Hugo-Maxted"}],
+    Apps: [
+      {name: "Outlook", link: "https://outlook.office.com/mail/inbox"},
+      {name: "IONOS Email", link: "https://email.ionos.co.uk/appsuite/?tl=y#!!&app=io.ox/mail&folder=default0/INBOX"},
+      {name: "Password Manager", link: "https://passwords.google.com/"},
+    ],
   };
 
   let periods: number[][][] = [

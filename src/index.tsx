@@ -219,7 +219,7 @@ const UI: () => JSX.Element = () => {
           {["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][time.getMonth()]} {time.getFullYear()}
         </div>
       </div>
-      <div className="links" style={{gridTemplateColumns: "auto 50px ".repeat(Object.keys(links).length - 1) + "auto"}}>
+      <div className="links" style={{gridTemplateColumns: "auto 1fr ".repeat(Object.keys(links).length - 1) + "auto"}}>
         {Object.keys(links).map(
           (catagory: string): JSX.Element => (
             <>

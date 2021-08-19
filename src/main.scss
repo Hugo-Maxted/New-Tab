@@ -32,6 +32,13 @@ body {
   > .timetable {
     text-align: right;
     grid-area: timetable;
+    > .Recess,
+    > .Lunch {
+      font-weight: bold;
+    }
+    > .Morning {
+      display: none;
+    }
   }
   > .weather,
   .timetable {

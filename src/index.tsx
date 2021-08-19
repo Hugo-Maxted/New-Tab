@@ -95,7 +95,14 @@ const UI: () => JSX.Element = () => {
       ["Food", "Food", "Recess", "Italian", "Coding", "Lunch", "HASS", "English"],
       ["Learning For Life", "Learning For Life", "Recess", "HASS", "HASS", "Lunch", "Innovations", "Innovations"],
       ["English", "English", "Recess", "Innovations", "Advo", "Lunch", "Health", "Wood"],
-      ["Italian", "Italian", "Recess", "Science", "Science", "Lunch", "PE", "Maths"],
+      ["Advo", "Italian", "Italian", "Recess", "Science", "Science", "Lunch", "PE", "Maths"],
+    ],
+    [
+      ["Advo", "Maths", "Maths", "Recess", "Science", "Food", "Lunch", "Learning For Life", "Careers"],
+      ["Wood", "Wood", "Recess", "Italian", "Coding", "Lunch", "HASS", "English"],
+      ["HASS", "HASS", "Recess", "PE", "PE", "Lunch", "Innovations", "Innovations"],
+      ["English", "English", "Recess", "Innovations", "Advo", "Lunch", "Food", "Health"],
+      ["Advo", "Science", "Science", "Recess", "Italian", "Italian", "Lunch", "Maths", "Learning For Life"],
     ],
   ];
 
@@ -143,9 +150,9 @@ const UI: () => JSX.Element = () => {
 
       periods[time.getDay() - 1].forEach((val: number[], index: number): void => {
         if (index === 0 && currentTime < getPeriodTime(val)) {
-          let hours = new Date(getPeriodTime(periods[time.getDay() - 1][index])).getHours() - new Date(currentTime).getHours();
-          let minutes = new Date(getPeriodTime(periods[time.getDay() - 1][index]) - currentTime).getMinutes();
-          let seconds = new Date(getPeriodTime(periods[time.getDay() - 1][index]) - currentTime).getSeconds();
+          let hours = new Date(getPeriodTime(val)).getHours() - new Date(currentTime).getHours();
+          let minutes = new Date(getPeriodTime(val) - currentTime).getMinutes();
+          let seconds = new Date(getPeriodTime(val) - currentTime).getSeconds();
 
           setPeriod({
             current: "Morning",
@@ -153,14 +160,13 @@ const UI: () => JSX.Element = () => {
             next: timetable[week][time.getDay() - 1],
           });
         } else if (currentTime >= getPeriodTime(val) && currentTime < getPeriodTime(periods[time.getDay() - 1][index + 1])) {
-          let hours = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1])).getHours() - new Date(currentTime).getHours();
           let minutes = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime).getMinutes();
           let seconds = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime).getSeconds();
 
           setPeriod({
             current: timetable[week][time.getDay() - 1][index],
-            left: hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
-            next: timetable[week][time.getDay() - 1].slice(index),
+            left: "0:" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
+            next: timetable[week][time.getDay() - 1].slice(index + 1),
           });
         }
       });
@@ -189,11 +195,11 @@ const UI: () => JSX.Element = () => {
         </div>
       </div>
       <div className="timetable">
-        <div>{period.current}</div>
+        <div className={period.current}>{period.current}</div>
         <div>{period.left}</div>
         <br />
         {period.next?.map((val: string): JSX.Element => {
-          return <div>{val}</div>;
+          return <div className={val}>{val}</div>;
         })}
       </div>
       <div className="time">

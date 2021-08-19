@@ -168,7 +168,7 @@ const UI: () => JSX.Element = () => {
 
             setPeriod({
               current: "",
-              left: hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
+              left: (hours - (minutes > val[1] ? 1 : 0)) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
               next: timetable[week][time.getDay() - 1],
             });
           } else if (currentTime >= getPeriodTime(val) && currentTime < getPeriodTime(periods[time.getDay() - 1][index + 1])) {

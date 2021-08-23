@@ -202,7 +202,7 @@ const UI: () => JSX.Element = () => {
       <div className="weather">
         <div>{weather === null ? "Loading..." : weather.current.temp_c + "°C"}</div>
         <div>
-          <a href="http://www.bom.gov.au/products/IDR703.loop.shtml" target="_blank">
+          <a href="http://www.bom.gov.au/products/IDR704.loop.shtml" target="_blank">
             {weather === null ? "" : weather.current.condition.text}
           </a>
         </div>

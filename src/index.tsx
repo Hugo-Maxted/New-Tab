@@ -18,6 +18,7 @@ const UI: () => JSX.Element = () => {
   const [time, setTime] = useState<Date>(new Date());
   const [weather, setWeather] = useState<any>(null);
   const [period, setPeriod] = useState<period>({} as period);
+  const [suffix, setSuffix] = useState<string>("th");
 
   let links: linkType = {
     Media: [
@@ -185,13 +186,40 @@ const UI: () => JSX.Element = () => {
       }
     }
 
+    function getSuffix(): void {
+      switch (new Date().getDate()) {
+        case 1:
+        case 11:
+        case 21:
+        case 31:
+          setSuffix("st");
+          break;
+        case 2:
+        case 12:
+        case 22:
+          setSuffix("nd");
+          break;
+        case 3:
+        case 13:
+        case 23:
+          setSuffix("rd");
+          break;
+        default:
+          setSuffix("th");
+          break;
+      }
+    }
+
     getWeather();
     getPeriod();
+    getSuffix();
 
     setInterval((): void => {
       setTime(new Date());
 
       getPeriod();
+
+      getSuffix();
     }, 1000);
 
     setInterval(getWeather, 60000);
@@ -221,7 +249,7 @@ const UI: () => JSX.Element = () => {
         </div>
         <div className="date">
           {["Sunday", "Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday"][time.getDay()]}, {time.getDate()}
-          {time.getDate().toString().split("")[1] === "1" ? "st" : time.getDate().toString().split("")[1] === "2" ? "nd" : time.getDate().toString().split("")[1] === "3" ? "rd" : "th"} of{" "}
+          {suffix} of{" "}
           {["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][time.getMonth()]} {time.getFullYear()}
         </div>
       </div>

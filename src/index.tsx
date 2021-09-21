@@ -33,7 +33,6 @@ const UI: () => JSX.Element = () => {
     Apps: [
       {name: "Outlook", link: "https://outlook.office.com/mail/inbox"},
       {name: "IONOS Email", link: "https://email.ionos.co.uk/appsuite/?tl=y#!!&app=io.ox/mail&folder=default0/INBOX"},
-      {name: "Passwords", link: "edge://settings/passwords"},
     ],
   };
 

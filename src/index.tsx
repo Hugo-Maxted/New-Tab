@@ -2,25 +2,13 @@ import React, {useEffect, useState} from "react";
 import {render} from "react-dom";
 import "./main.css";
 
-interface linkType {
-  [catagory: string]: {
-    name: string;
-    link: string;
-  }[];
-}
-interface period {
-  current: string;
-  left: string;
-  next: string[];
-}
-
-const UI: () => JSX.Element = () => {
-  const [time, setTime] = useState<Date>(new Date());
-  const [weather, setWeather] = useState<any>(null);
-  const [period, setPeriod] = useState<period>({} as period);
-  const [suffix, setSuffix] = useState<string>("th");
-
-  let links: linkType = {
+let config: {
+  links: linkType
+  periods: number[][][]
+  timetable: string[][][]
+  city: string
+} = {
+  links: {
     Media: [
       {name: "Youtube", link: "https://www.youtube.com"},
       {name: "Github", link: "https://github.com/Hugo-Maxted"},
@@ -34,9 +22,8 @@ const UI: () => JSX.Element = () => {
       {name: "Outlook", link: "https://outlook.office.com/mail/inbox"},
       {name: "IONOS Email", link: "https://email.ionos.co.uk/appsuite/?tl=y#!!&app=io.ox/mail&folder=default0/INBOX"},
     ],
-  };
-
-  let periods: number[][][] = [
+  },
+  periods: [
     [
       [8, 45],
       [9, 0],
@@ -94,9 +81,8 @@ const UI: () => JSX.Element = () => {
       [14, 35],
       [15, 30],
     ],
-  ];
-
-  let timetable = [
+  ],
+  timetable: [
     [
       ["Advo", "Maths", "Maths", "Recess", "PE", "Careers", "Lunch", "Science", "Wood"],
       ["Food", "Food", "Recess", "Italian", "Coding", "Lunch", "HASS", "English"],
@@ -111,7 +97,42 @@ const UI: () => JSX.Element = () => {
       ["English", "English", "Recess", "Innovations", "Advo", "Lunch", "Food", "Health"],
       ["Advo", "Science", "Science", "Recess", "Italian", "Italian", "Lunch", "Maths", "Learning For Life"],
     ],
-  ];
+  ],
+  city: "Perth"
+}
+
+if (!localStorage.getItem("config")) localStorage.setItem("config", JSON.stringify(config));
+
+config = JSON.parse(localStorage.getItem("config") || "") as {
+  links: linkType
+  periods: number[][][]
+  timetable: string[][][]
+  city: string
+};
+
+interface linkType {
+  [catagory: string]: {
+    name: string;
+    link: string;
+  }[];
+}
+interface period {
+  current: string;
+  left: string;
+  next: string[];
+}
+
+const UI: () => JSX.Element = () => {
+  const [time, setTime] = useState<Date>(new Date());
+  const [weather, setWeather] = useState<any>(null);
+  const [period, setPeriod] = useState<period>({} as period);
+  const [suffix, setSuffix] = useState<string>("th");
+
+  let links: linkType = config.links;
+
+  let periods: number[][][] = config.periods
+
+  let timetable: string[][][] = config.timetable;
 
   useEffect((): void => {
     async function getWeather(): Promise<any> {
@@ -119,7 +140,7 @@ const UI: () => JSX.Element = () => {
       header.append("pragma", "no-cache");
       header.append("cache-control", "no-cache");
 
-      await fetch(new Request("https://api.weatherapi.com/v1/current.json?key=e1830767ff0446e7a47132846211907&q=Perth"), {
+      await fetch(new Request("https://api.weatherapi.com/v1/current.json?key=e1830767ff0446e7a47132846211907&q="  + config.city), {
         method: "GET",
         headers: header,
       })
@@ -229,7 +250,7 @@ const UI: () => JSX.Element = () => {
       <div className="weather">
         <div>{weather === null ? "Loading..." : weather.current.temp_c + "°C"}</div>
         <div>
-          <a href="http://www.bom.gov.au/products/IDR704.loop.shtml" target="_blank">
+          <a href="http://www.bom.gov.au/products/IDR704.loop.shtml" target="_blank" rel="noreferrer">
             {weather === null ? "" : weather.current.condition.text}
           </a>
         </div>

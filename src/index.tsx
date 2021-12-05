@@ -268,7 +268,7 @@ const UI: () => JSX.Element = () => {
           {time.getHours()}:{time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()}:{time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds()}
         </div>
         <div className="date">
-          {["Sunday", "Monday", "Teusday", "Wednesday", "Thursday", "Friday", "Saturday"][time.getDay()]}, {time.getDate()}
+          {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][time.getDay()]}, {time.getDate()}
           {suffix} of{" "}
           {["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][time.getMonth()]} {time.getFullYear()}
         </div>

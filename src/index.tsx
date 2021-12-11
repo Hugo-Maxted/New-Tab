@@ -214,12 +214,10 @@ const UI: () => JSX.Element = () => {
           setSuffix("st");
           break;
         case 2:
-        case 12:
         case 22:
           setSuffix("nd");
           break;
         case 3:
-        case 13:
         case 23:
           setSuffix("rd");
           break;

@@ -209,7 +209,6 @@ const UI: () => JSX.Element = () => {
     function getSuffix(): void {
       switch (new Date().getDate()) {
         case 1:
-        case 11:
         case 21:
         case 31:
           setSuffix("st");

@@ -13,11 +13,6 @@ let config: {
       {name: "Youtube", link: "https://www.youtube.com"},
       {name: "Github", link: "https://github.com/Hugo-Maxted"},
     ],
-    School: [
-      {name: "Connect", link: "https://connect.det.wa.edu.au/group/students/ui/overview"},
-      {name: "Mathspace", link: "https://mathspace.co/student/"},
-      {name: "Stile App", link: "https://stileapp.com/au/PMS_WA-988"},
-    ],
     Apps: [
       {name: "Outlook", link: "https://outlook.office.com/mail/inbox"},
       {name: "IONOS Email", link: "https://email.ionos.co.uk/appsuite/?tl=y#!!&app=io.ox/mail&folder=default0/INBOX"},
@@ -25,77 +20,40 @@ let config: {
   },
   periods: [
     [
-      [8, 45],
-      [9, 0],
-      [9, 55],
-      [10, 50],
-      [11, 15],
-      [12, 10],
-      [13, 5],
-      [13, 40],
-      [14, 35],
-      [15, 30],
+      [8, 30],
+      [15, 10],
     ],
     [
-      [8, 45],
-      [9, 40],
-      [10, 35],
-      [10, 55],
-      [11, 50],
-      [12, 45],
-      [13, 25],
-      [14, 20],
-      [15, 15],
+      [8, 30],
+      [15, 10],
     ],
     [
-      [8, 45],
-      [9, 40],
-      [10, 35],
-      [10, 55],
-      [11, 50],
-      [12, 45],
-      [13, 25],
-      [14, 20],
-      [15, 15],
+      [8, 30],
+      [15, 10],
     ],
     [
-      [8, 45],
-      [9, 40],
-      [10, 35],
-      [10, 55],
-      [11, 50],
-      [12, 30],
-      [13, 10],
-      [14, 5],
-      [15, 0],
+      [8, 30],
+      [15, 10],
     ],
     [
-      [8, 45],
-      [9, 0],
-      [9, 55],
-      [10, 50],
-      [11, 15],
-      [12, 10],
-      [13, 5],
-      [13, 40],
-      [14, 35],
-      [15, 30],
+      [8, 30],
+      [15, 10],
     ],
   ],
   timetable: [
     [
-      ["Advo", "Maths", "Maths", "Recess", "PE", "Careers", "Lunch", "Science", "Wood"],
-      ["Food", "Food", "Recess", "Italian", "Coding", "Lunch", "HASS", "English"],
-      ["Learning For Life", "Learning For Life", "Recess", "HASS", "HASS", "Lunch", "Innovations", "Innovations"],
-      ["English", "English", "Recess", "Innovations", "Advo", "Lunch", "Health", "Wood"],
-      ["Advo", "Italian", "Italian", "Recess", "Science", "Science", "Lunch", "PE", "Maths"],
+      ["Home Room"],
+      ["Home Room"],
+      ["Home Room"],
+      ["Home Room"],
+      ["Home Room"],
     ],
     [
-      ["Advo", "Maths", "Maths", "Recess", "Science", "Food", "Lunch", "Learning For Life", "Careers"],
-      ["Wood", "Wood", "Recess", "Italian", "Coding", "Lunch", "HASS", "English"],
-      ["HASS", "HASS", "Recess", "PE", "PE", "Lunch", "Innovations", "Innovations"],
-      ["English", "English", "Recess", "Innovations", "Advo", "Lunch", "Food", "Health"],
-      ["Advo", "Science", "Science", "Recess", "Italian", "Italian", "Lunch", "Maths", "Learning For Life"],
+      ["Home Room"],
+      ["Home Room"],
+      ["Home Room"],
+      ["Home Room"],
+      ["Home Room"],
     ],
   ],
   city: "Perth"
@@ -130,9 +88,9 @@ const UI: () => JSX.Element = () => {
 
   let links: linkType = config.links;
 
-  let periods: number[][][] = config.periods
+  let periods: number[][][] | undefined = config.periods
 
-  let timetable: string[][][] = config.timetable;
+  let timetable: string[][][] | undefined = config.timetable;
 
   useEffect((): void => {
     async function getWeather(): Promise<any> {
@@ -153,6 +111,8 @@ const UI: () => JSX.Element = () => {
     }
 
     function getPeriod(): void {
+      if (periods  === undefined|| timetable === undefined) return
+
       let currentTime = new Date().getTime();
       let week = Math.ceil(((new Date().getTime() - new Date(new Date().getFullYear(), 0, 1).getTime()) / 86400000 + new Date(new Date().getFullYear(), 0, 1).getDay() + 1) / 7) % 2 === 0 ? 0 : 1;
 
@@ -180,8 +140,9 @@ const UI: () => JSX.Element = () => {
           left: "",
           next: [],
         });
-      } else {
+      } else {        
         periods[time.getDay() - 1].forEach((val: number[], index: number): void => {
+      if (periods  === undefined|| timetable === undefined) return
           if (index === 0 && currentTime < getPeriodTime(val)) {
             let hours = new Date(getPeriodTime(val)).getHours() - new Date(currentTime).getHours();
             let minutes = new Date(getPeriodTime(val) - currentTime).getMinutes();
@@ -252,14 +213,14 @@ const UI: () => JSX.Element = () => {
           </a>
         </div>
       </div>
-      <div className="timetable">
+      {(periods !== undefined && timetable !== undefined) ? (<div className="timetable">
         <div className={period.current}>{period.current}</div>
         <div>{period.left}</div>
         <br />
         {period.next?.map((val: string): JSX.Element => {
           return <div className={val}>{val}</div>;
         })}
-      </div>
+      </div>) : null}
       <div className="time">
         <div className="time">
           {time.getHours()}:{time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()}:{time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds()}

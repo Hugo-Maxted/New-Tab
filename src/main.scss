@@ -24,7 +24,7 @@ body {
   width: 100vw;
   height: 100vh;
   grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: 2fr auto 1fr auto 2fr;
+  grid-template-rows: 3fr auto 1fr auto 3fr;
   > .weather {
     grid-area: weather;
   }

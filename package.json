@@ -16,7 +16,7 @@
     "typescript": "^4.1.2"
   },
   "scripts": {
-    "build": "set \"INLINE_RUNTIME_CHUNK=false\" && set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
+    "build": "sass --charset --no-source-map --style=compressed ./src/main.scss ./src/main.css && set \"INLINE_RUNTIME_CHUNK=false\" && set \"GENERATE_SOURCEMAP=false\" && set \"INLINE_RUNTIME_CHUNK=false\" && set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "start": "react-scripts start"
   },
   "eslintConfig": {

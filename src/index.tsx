@@ -4,8 +4,6 @@ import "./main.css";
 
 let config: {
   links: linkType
-  periods: number[][][]
-  timetable: string[][][]
   city: string
 } = {
   links: {
@@ -14,48 +12,14 @@ let config: {
       {name: "Github", link: "https://github.com/Hugo-Maxted"},
     ],
     Apps: [
-      {name: "Outlook", link: "https://outlook.office.com/mail/inbox"},
       {name: "IONOS Email", link: "https://email.ionos.co.uk/appsuite/?tl=y#!!&app=io.ox/mail&folder=default0/INBOX"},
+      {name: "Gmail", link: "https://mail.google.com/mail/u/0/#inbox"},
+    ],
+    School: [
+      {name: "Outlook", link: "https://outlook.office.com/mail/inbox"},
+      {name: "Nexus", link: "https://nexus.ccgs.wa.edu.au/"},
     ],
   },
-  periods: [
-    [
-      [8, 30],
-      [15, 10],
-    ],
-    [
-      [8, 30],
-      [15, 10],
-    ],
-    [
-      [8, 30],
-      [15, 10],
-    ],
-    [
-      [8, 30],
-      [15, 10],
-    ],
-    [
-      [8, 30],
-      [15, 10],
-    ],
-  ],
-  timetable: [
-    [
-      ["Home Room"],
-      ["Home Room"],
-      ["Home Room"],
-      ["Home Room"],
-      ["Home Room"],
-    ],
-    [
-      ["Home Room"],
-      ["Home Room"],
-      ["Home Room"],
-      ["Home Room"],
-      ["Home Room"],
-    ],
-  ],
   city: "Perth"
 }
 
@@ -63,8 +27,6 @@ if (!localStorage.getItem("config")) localStorage.setItem("config", JSON.stringi
 
 config = JSON.parse(localStorage.getItem("config") || "") as {
   links: linkType
-  periods: number[][][]
-  timetable: string[][][]
   city: string
 };
 
@@ -74,23 +36,13 @@ interface linkType {
     link: string;
   }[];
 }
-interface period {
-  current: string;
-  left: string;
-  next: string[];
-}
 
 const UI: () => JSX.Element = () => {
   const [time, setTime] = useState<Date>(new Date());
   const [weather, setWeather] = useState<any>(null);
-  const [period, setPeriod] = useState<period>({} as period);
   const [suffix, setSuffix] = useState<string>("th");
 
   let links: linkType = config.links;
-
-  let periods: number[][][] | undefined = config.periods
-
-  let timetable: string[][][] | undefined = config.timetable;
 
   useEffect((): void => {
     async function getWeather(): Promise<any> {
@@ -108,63 +60,6 @@ const UI: () => JSX.Element = () => {
         .then((data: any): void => {
           setWeather(data);
         });
-    }
-
-    function getPeriod(): void {
-      if (periods  === undefined|| timetable === undefined) return
-
-      let currentTime = new Date().getTime();
-      let week = Math.ceil(((new Date().getTime() - new Date(new Date().getFullYear(), 0, 1).getTime()) / 86400000 + new Date(new Date().getFullYear(), 0, 1).getDay() + 1) / 7) % 2 === 0 ? 0 : 1;
-
-      function getPeriodTime(period: number[]): number {
-        let date = new Date();
-
-        date.setHours(period[0]);
-        date.setMinutes(period[1]);
-        date.setSeconds(0);
-
-        return date.getTime();
-      }
-
-      if (new Date().getDay() === 0 || new Date().getDay() === 6) {
-        setPeriod({
-          current: "",
-          left: "",
-          next: [],
-        });
-
-        return;
-      } else if (getPeriodTime(periods[time.getDay() - 1][periods[time.getDay() - 1].length - 1]) < currentTime) {
-        setPeriod({
-          current: "",
-          left: "",
-          next: [],
-        });
-      } else {        
-        periods[time.getDay() - 1].forEach((val: number[], index: number): void => {
-      if (periods  === undefined|| timetable === undefined) return
-          if (index === 0 && currentTime < getPeriodTime(val)) {
-            let hours = new Date(getPeriodTime(val)).getHours() - new Date(currentTime).getHours();
-            let minutes = new Date(getPeriodTime(val) - currentTime).getMinutes();
-            let seconds = new Date(getPeriodTime(val) - currentTime).getSeconds();
-
-            setPeriod({
-              current: "",
-              left: (hours - (minutes > val[1] ? 1 : 0)) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
-              next: timetable[week][time.getDay() - 1],
-            });
-          } else if (currentTime >= getPeriodTime(val) && currentTime < getPeriodTime(periods[time.getDay() - 1][index + 1])) {
-            let minutes = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime).getMinutes();
-            let seconds = new Date(getPeriodTime(periods[time.getDay() - 1][index + 1]) - currentTime).getSeconds();
-
-            setPeriod({
-              current: timetable[week][time.getDay() - 1][index],
-              left: "0:" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds),
-              next: timetable[week][time.getDay() - 1].slice(index + 1),
-            });
-          }
-        });
-      }
     }
 
     function getSuffix(): void {
@@ -189,13 +84,10 @@ const UI: () => JSX.Element = () => {
     }
 
     getWeather();
-    getPeriod();
     getSuffix();
 
     setInterval((): void => {
       setTime(new Date());
-
-      getPeriod();
 
       getSuffix();
     }, 1000);
@@ -213,14 +105,6 @@ const UI: () => JSX.Element = () => {
           </a>
         </div>
       </div>
-      {(periods !== undefined && timetable !== undefined) ? (<div className="timetable">
-        <div className={period.current}>{period.current}</div>
-        <div>{period.left}</div>
-        <br />
-        {period.next?.map((val: string): JSX.Element => {
-          return <div className={val}>{val}</div>;
-        })}
-      </div>) : null}
       <div className="time">
         <div className="time">
           {time.getHours()}:{time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()}:{time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds()}

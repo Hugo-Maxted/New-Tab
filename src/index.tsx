@@ -11,7 +11,7 @@ let config: {
       {name: "Youtube", link: "https://www.youtube.com"},
       {name: "Github", link: "https://github.com/Hugo-Maxted"},
     ],
-    Apps: [
+    Email: [
       {name: "IONOS Email", link: "https://email.ionos.co.uk/appsuite/?tl=y#!!&app=io.ox/mail&folder=default0/INBOX"},
       {name: "Gmail", link: "https://mail.google.com/mail/u/0/#inbox"},
     ],
@@ -107,7 +107,7 @@ const UI: () => JSX.Element = () => {
       </div>
       <div className="time">
         <div className="time">
-          {time.getHours()}:{time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()}:{time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds()}
+          {time.getHours()}:{time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()}
         </div>
         <div className="date">
           {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][time.getDay()]}, {time.getDate()}
